@@ -1,0 +1,158 @@
+// Pricing Plans Styles
+.flat-section.flat-pricing {
+    padding: 70px 0;
+
+    .box-pricing {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+
+        &:hover,
+        &.active {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .price {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 5px;
+
+            h4 {
+                font-size: 36px;
+                font-weight: 700;
+                color: var(--primary-color);
+                margin: 0;
+            }
+        }
+
+        .body-2.text-variant-1 {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .box-title-price {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e5e5;
+
+            .title {
+                font-size: 24px;
+                font-weight: 600;
+                margin-bottom: 10px;
+                color: #333;
+            }
+
+            .desc {
+                color: #666;
+                font-size: 14px;
+                margin: 0;
+            }
+        }
+
+        .list-price {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px 0;
+            text-align: left;
+            flex: 1; // This will push the button to the bottom
+
+            .item {
+                padding: 10px 0;
+                color: #666;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+
+                .check-icon {
+                    color: #28a745;
+                    margin-right: 10px;
+                    display: inline-flex;
+                    flex-shrink: 0;
+
+                    &:before {
+                        content: "✓";
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+
+        .tf-btn {
+            width: 100%;
+            padding: 12px 20px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: auto; // Push button to bottom
+
+            &:hover {
+                background: var(--primary-color-hover);
+                color: #fff;
+            }
+        }
+
+        &.active {
+            .tf-btn {
+                background: #28a745;
+
+                &:hover {
+                    background: #218838;
+                }
+            }
+        }
+    }
+
+    // Responsive grid system
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
+    // Maximum 3 items per row on large screens
+    .col-lg-4 {
+        @media (min-width: 992px) {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+        }
+    }
+
+    // 2 items per row on medium screens
+    .col-md-6 {
+        @media (min-width: 768px) and (max-width: 991px) {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+
+    // 1 item per row on small screens
+    @media (max-width: 767px) {
+        .col-lg-4,
+        .col-md-6 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+
+    // Margin bottom for spacing between rows
+    .mb-4 {
+        margin-bottom: 1.5rem;
+    }
+}
