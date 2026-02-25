@@ -1,4 +1,4 @@
-* Email: contact@botble.com
-* Website: botble.com
-* Support center: https://botble.ticksy.com
-* Online documentation: https://docs.botble.com/flex-home
+* Email: 
+* Website: 
+* Support center:
+* Online documentation: 
