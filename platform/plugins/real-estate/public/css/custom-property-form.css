@@ -1,0 +1,296 @@
+/* Custom Property Form CSS - 99acres Style */
+
+/* ==================== PROPERTY TYPE SELECTOR ==================== */
+.property-type-selector {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.type-radio-card {
+    flex: 1;
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.type-radio-card:hover {
+    border-color: #0078bd;
+    background: #f5f9ff;
+}
+
+.type-radio-card.active {
+    border-color: #0078bd;
+    background: #e8f4fc;
+}
+
+/* ==================== CATEGORY CARDS ==================== */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.category-option,
+.category-card {
+    padding: 14px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+
+.category-option:hover,
+.category-card:hover {
+    border-color: #0078bd;
+    box-shadow: 0 2px 8px rgba(0, 120, 189, 0.15);
+}
+
+.category-option.selected,
+.category-card.selected {
+    border-color: #0078bd;
+    background: #e8f4fc;
+    color: #0078bd;
+}
+
+/* ==================== COUNTER BOXES ==================== */
+.counter-box {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+}
+
+.counter-box span {
+    display: block;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.counter-box .btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+    transition: all 0.2s;
+}
+
+.counter-box .btn:hover {
+    background: #0078bd;
+    border-color: #0078bd;
+    color: #fff;
+}
+
+/* ==================== AREA FIELDS ==================== */
+.area-link {
+    display: inline-block;
+    color: #0078bd;
+    cursor: pointer;
+    font-weight: 500;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.area-link:hover {
+    text-decoration: underline;
+}
+
+/* ==================== RADIO PILLS ==================== */
+.pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.pill-option {
+    padding: 10px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    font-size: 14px;
+    background: #fff;
+    display: inline-block;
+}
+
+.pill-option:hover {
+    border-color: #0078bd;
+    color: #0078bd;
+}
+
+.hidden-input:checked + .pill-option {
+    background: #0078bd;
+    border-color: #0078bd;
+    color: #fff;
+}
+
+.hidden-input {
+    display: none;
+}
+
+/* ==================== CHECKBOX STYLES ==================== */
+.room-checkbox,
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+
+.room-checkbox:hover,
+.custom-checkbox:hover {
+    border-color: #0078bd;
+}
+
+/* ==================== SECTION HEADERS ==================== */
+.sub-heading {
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+    margin-bottom: 12px;
+    margin-top: 20px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #0078bd;
+}
+
+/* ==================== PRICE INPUTS ==================== */
+.price-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.price-row input {
+    flex: 1;
+}
+
+/* ==================== HIDDEN SECTIONS ==================== */
+.hidden-section {
+    display: none;
+}
+
+.d-none {
+    display: none !important;
+}
+
+/* ==================== OFFICE MODE ==================== */
+.office-mode {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.office-mode h5 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* ==================== PG SECTION ==================== */
+#pg_wrapper {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* ==================== PRICING SECTION ==================== */
+#pricing_section,
+#sale_section,
+#rent_section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* ==================== INPUT GROUPS ==================== */
+.input-group {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group .form-control {
+    flex: 1;
+    min-width: 0;
+}
+
+.input-group .form-select {
+    width: auto;
+}
+
+.input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+}
+
+/* ==================== RESIDENTIAL/COMMERCIAL SECTIONS ==================== */
+#residential_section,
+#commercial_section {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pill-group {
+        flex-direction: column;
+    }
+    
+    .price-row {
+        flex-direction: column;
+    }
+    
+    .counter-box .btn {
+        width: 32px;
+        height: 32px;
+    }
+}
