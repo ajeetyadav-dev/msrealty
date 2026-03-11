@@ -50,29 +50,31 @@ class NewsletterServiceProvider extends ServiceProvider implements DeferrablePro
 
         $this->app->register(EventServiceProvider::class);
 
-        DashboardMenu::default()->beforeRetrieving(function (): void {
-            DashboardMenu::make()
-                ->registerItem(
-                    DashboardMenuItem::make()
-                        ->id('cms-plugins-newsletter')
-                        ->priority(430)
-                        ->name('plugins/newsletter::newsletter.name')
-                        ->icon('ti ti-mail')
-                        ->route('newsletter.index')
-                );
-        });
+        // Newsletter menu removed temporarily
+        // DashboardMenu::default()->beforeRetrieving(function (): void {
+        //     DashboardMenu::make()
+        //         ->registerItem(
+        //             DashboardMenuItem::make()
+        //                 ->id('cms-plugins-newsletter')
+        //                 ->priority(430)
+        //                 ->name('plugins/newsletter::newsletter.name')
+        //                 ->icon('ti ti-mail')
+        //                 ->route('newsletter.index')
+        //         );
+        // });
 
-        PanelSectionManager::default()->beforeRendering(function (): void {
-            PanelSectionManager::registerItem(
-                SettingOthersPanelSection::class,
-                fn () => PanelSectionItem::make('newsletter')
-                    ->setTitle(trans('plugins/newsletter::newsletter.settings.title'))
-                    ->withIcon('ti ti-mail-cog')
-                    ->withDescription(trans('plugins/newsletter::newsletter.settings.panel_description'))
-                    ->withPriority(140)
-                    ->withRoute('newsletter.settings')
-            );
-        });
+        // Newsletter panel section removed temporarily
+        // PanelSectionManager::default()->beforeRendering(function (): void {
+        //     PanelSectionManager::registerItem(
+        //         SettingOthersPanelSection::class,
+        //         fn () => PanelSectionItem::make('newsletter')
+        //             ->setTitle(trans('plugins/newsletter::newsletter.settings.title'))
+        //             ->withIcon('ti ti-mail-cog')
+        //             ->withDescription(trans('plugins/newsletter::newsletter.settings.panel_description'))
+        //             ->withPriority(140)
+        //             ->withRoute('newsletter.settings')
+        //     );
+        // });
 
         $this->app->booted(function (): void {
             EmailHandler::addTemplateSettings(NEWSLETTER_MODULE_SCREEN_NAME, config('plugins.newsletter.email', []));

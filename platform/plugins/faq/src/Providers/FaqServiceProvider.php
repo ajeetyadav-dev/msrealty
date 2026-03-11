@@ -69,34 +69,35 @@ class FaqServiceProvider extends ServiceProvider implements DeferrableProvider
             }
         }
 
-        DashboardMenu::default()->beforeRetrieving(function (): void {
-            DashboardMenu::make()
-                ->registerItem(
-                    DashboardMenuItem::make()
-                        ->id('cms-plugins-faq')
-                        ->priority(420)
-                        ->name('plugins/faq::faq.name')
-                        ->icon('ti ti-help-octagon')
-                )
-                ->registerItem(
-                    DashboardMenuItem::make()
-                        ->id('cms-plugins-faq-list')
-                        ->priority(0)
-                        ->parentId('cms-plugins-faq')
-                        ->name('plugins/faq::faq.name')
-                        ->icon('ti ti-list-check')
-                        ->route('faq.index')
-                )
-                ->registerItem(
-                    DashboardMenuItem::make()
-                        ->id('cms-plugins-faq-category')
-                        ->priority(10)
-                        ->parentId('cms-plugins-faq')
-                        ->name('plugins/faq::faq-category.name')
-                        ->icon('ti ti-folder')
-                        ->route('faq_category.index')
-                );
-        });
+        // Dashboard menu removed temporarily
+        // DashboardMenu::default()->beforeRetrieving(function (): void {
+        //     DashboardMenu::make()
+        //         ->registerItem(
+        //             DashboardMenuItem::make()
+        //                 ->id('cms-plugins-faq')
+        //                 ->priority(420)
+        //                 ->name('plugins/faq::faq.name')
+        //                 ->icon('ti ti-help-octagon')
+        //         )
+        //         ->registerItem(
+        //             DashboardMenuItem::make()
+        //                 ->id('cms-plugins-faq-list')
+        //                 ->priority(0)
+        //                 ->parentId('cms-plugins-faq')
+        //                 ->name('plugins/faq::faq.name')
+        //                 ->icon('ti ti-list-check')
+        //                 ->route('faq.index')
+        //         )
+        //         ->registerItem(
+        //             DashboardMenuItem::make()
+        //                 ->id('cms-plugins-faq-category')
+        //                 ->priority(10)
+        //                 ->parentId('cms-plugins-faq')
+        //                 ->name('plugins/faq::faq-category.name')
+        //                 ->icon('ti ti-folder')
+        //                 ->route('faq_category.index')
+        //         );
+        // });
 
         PanelSectionManager::default()->beforeRendering(function (): void {
             PanelSectionManager::registerItem(

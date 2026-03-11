@@ -12,38 +12,101 @@ $(() => {
     
     const categoryMapping = {
         residential: [
-            { id: 'apartment', label: 'Apartment', icon: '🏘️', hasBedrooms: true },
-            { id: 'house', label: 'House', icon: '🏠', hasBedrooms: true },
-            { id: 'villa', label: 'Villa', icon: '🏛️', hasBedrooms: true },
-            { id: 'independent_builder', label: 'Independent Builder Floor', icon: '🏢', hasBedrooms: true },
-            { id: 'plot', label: 'Plot', icon: '📍', hasBedrooms: false },
-            { id: 'land', label: 'Land', icon: '🌍', hasBedrooms: false },
-            { id: 'studio', label: 'Studio Apartment', icon: '📹', hasBedrooms: true },
-            { id: 'farmhouse', label: 'Farmhouse', icon: '🚜', hasBedrooms: true },
-            { id: 'condo', label: 'Condo', icon: '🏰', hasBedrooms: true },
+            {
+                id: 'apartment',
+                label: 'Apartment',
+                icon: '🏢',
+                hasBedrooms: true,
+                subcategories: ['1 RK', '1 BHK', '2 BHK', '3 BHK', '4 BHK', '4+ BHK'],
+            },
+            {
+                id: 'builder_floor',
+                label: 'Builder Floor',
+                icon: '🏬',
+                hasBedrooms: true,
+                subcategories: ['Low Rise', 'High Rise', 'Independent Floor'],
+            },
+            {
+                id: 'independent_house',
+                label: 'Independent House',
+                icon: '🏠',
+                hasBedrooms: true,
+                subcategories: ['Bungalow', 'Row House', 'Kothi'],
+            },
+            {
+                id: 'villa',
+                label: 'Villa',
+                icon: '🏛️',
+                hasBedrooms: true,
+                subcategories: ['Independent Villa', 'Gated Villa', 'Luxury Villa'],
+            },
+            {
+                id: 'plot',
+                label: 'Plot',
+                icon: '📍',
+                hasBedrooms: false,
+                subcategories: ['Residential Plot', 'Farm Land', 'Corner Plot'],
+            },
         ],
         commercial: {
             office: [
-                { id: 'office_space', label: 'Office Space', icon: '🏢' },
-                { id: 'it_pk', label: 'IT Park', icon: '🏬' },
-                { id: 'sez', label: 'SEZ', icon: '🏭' }
+                { id: 'office', label: 'Office', icon: '🏢', subcategories: ['Business Park', 'IT Park', 'SEZ', 'Commercial Building'] },
+                { id: 'co_working', label: 'Co-working space', icon: '🧑‍💻', subcategories: ['Hot Desk', 'Dedicated Desk', 'Private Cabin'] },
             ],
             retail: [
-                { id: 'shop', label: 'Shop', icon: '🛍️' },
-                { id: 'showroom', label: 'Showroom', icon: '🏪' },
-                { id: 'mall', label: 'Restaurant', icon: '🍽️' }
-            ],
-            land: [
-                { id: 'commercial_land', label: 'Commercial Land', icon: '📍' },
-                { id: 'industrial_land', label: 'Industrial Land', icon: '🏭' }
+                { id: 'shop', label: 'Shop', icon: '🛍️', subcategories: ['High Street', 'Mall', 'Market'] },
+                { id: 'showroom', label: 'Showroom', icon: '🏪', subcategories: ['Road-facing', 'Corner', 'Anchor'] },
             ],
             warehouse: [
-                { id: 'warehouse', label: 'Warehouse', icon: '🏚️' },
-                { id: 'godown', label: 'Godown', icon: '🏚️' },
-                { id: 'cold_storage', label: 'Cold Storage', icon: '❄️' }
-            ]
-        }
+                { id: 'warehouse', label: 'Warehouse', icon: '🏚️', subcategories: ['Godown', 'Cold Storage', 'Logistics Hub'] },
+            ],
+            land: [
+                { id: 'commercial_land', label: 'Commercial Land', icon: '📍', subcategories: ['Industrial', 'Institutional', 'Mixed Use'] },
+            ],
+            industry: [
+                { id: 'factory', label: 'Factory', icon: '🏭', subcategories: ['Light', 'Heavy'] },
+            ],
+            hospitality: [
+                { id: 'hotel', label: 'Hotel', icon: '🏨', subcategories: ['Hotel', 'Resort', 'Guest House'] },
+            ],
+        },
     };
+
+    const $subBlock = $('#subcategory_block');
+    const $subContainer = $('#subcategory_container');
+    const $propertySub = $('#property_subcategory');
+    const $commercialSub = $('#commercial_subcategory');
+
+    function resetSubcategory() {
+        $propertySub.val('');
+        $commercialSub.val('');
+        $subContainer.empty();
+        $subBlock.addClass('d-none').hide();
+    }
+
+    function renderSubcategories(subcategories, mode) {
+        resetSubcategory();
+        if (!subcategories || !subcategories.length) return;
+
+        const hiddenTarget = mode === 'commercial' ? $commercialSub : $propertySub;
+
+        subcategories.forEach((label, idx) => {
+            const id = `subcat_${mode}_${idx}`;
+            const chip = `
+                <div class="subcat-chip">
+                    <input type="radio" id="${id}" name="${mode === 'commercial' ? 'commercial_subcategory_choice' : 'property_subcategory_choice'}" value="${label}">
+                    <label for="${id}">${label}</label>
+                </div>
+            `;
+            $subContainer.append(chip);
+        });
+
+        $subBlock.removeClass('d-none').fadeIn(150);
+
+        $subContainer.find('input[type="radio"]').on('change', function () {
+            hiddenTarget.val($(this).val());
+        });
+    }
 
     // ============================================================
     // 2. POPULATE RESIDENTIAL CATEGORIES
@@ -118,6 +181,13 @@ $(() => {
                 container.append(html);
             });
             container.closest('.form-group').removeClass('d-none');
+
+            // attach commercial category handler for subcategories
+            container.find('input[type="radio"]').on('change', function () {
+                const chosenId = $(this).val();
+                const chosen = categories.find(c => c.id === chosenId);
+                renderSubcategories(chosen?.subcategories || [], 'commercial');
+            });
         } else {
             container.closest('.form-group').addClass('d-none');
         }
@@ -165,6 +235,8 @@ $(() => {
                 'box-shadow': '0 2px 8px rgba(76, 175, 80, 0.3)'
             });
             
+            const selected = categoryMapping.residential.find(c => c.id === selectedValue);
+            renderSubcategories(selected?.subcategories || [], 'residential');
             updateFieldsBasedOnResidentialCategory(selectedValue, hasBedrooms);
         });
     }
@@ -196,12 +268,19 @@ $(() => {
         console.log('Property group changed to:', propertyGroup);
 
         if (propertyGroup === 'residential') {
+            // Reset commercial selections
+            $('input[name="commercial_main_type"]').prop('checked', false);
+            $('input[name="commercial_category"]').prop('checked', false);
+            $('#commercial-sub-category-container').empty();
+            $commercialSub.val('');
+
             // Show residential categories
             $('#residential-category-block').fadeIn(200).removeClass('d-none');
             $('#commercial_type_container').fadeOut(200).addClass('d-none');
             
             // Show residential fields in Step 3
             populateResidentialCategories();
+            resetSubcategory();
             
             // Hide office fields
             $('#office-full-section').fadeOut(200).addClass('d-none');
@@ -211,6 +290,10 @@ $(() => {
             $('#commercial_section').fadeOut(200).addClass('d-none');
             
         } else if (propertyGroup === 'commercial') {
+            // Reset residential selections
+            $('input[name="property_category"]').prop('checked', false);
+            $propertySub.val('');
+
             // Hide residential categories
             $('#residential-category-block').fadeOut(200).addClass('d-none');
             
@@ -220,6 +303,7 @@ $(() => {
             // Hide residential fields
             $('.residential-field').fadeOut(200);
             $('#furnishing-options-panel').fadeOut(200);
+            resetSubcategory();
             
             // Check which commercial type is selected
             const selectedCommercialType = $('input[name="commercial_main_type"]:checked').val();
@@ -243,6 +327,11 @@ $(() => {
     function handleCommercialMainTypeChange() {
         const commercialType = $('input[name="commercial_main_type"]:checked').val();
         console.log('Commercial type changed to:', commercialType);
+        resetSubcategory();
+
+        // Reset commercial category choice when main type changes
+        $('input[name="commercial_category"]').prop('checked', false);
+        $('#commercial-sub-category-container').empty();
 
         // Hide all office modes first
         $('.office-mode').addClass('d-none');
@@ -274,6 +363,10 @@ $(() => {
             // Hide office fields
             $('#office-full-section').fadeOut(200).addClass('d-none');
             populateCommercialCategories('warehouse');
+        } else if (commercialType === 'industry') {
+            populateCommercialCategories('industry');
+        } else if (commercialType === 'hospitality') {
+            populateCommercialCategories('hospitality');
         }
 
         // Always show commercial section in Step 6
@@ -287,6 +380,7 @@ $(() => {
     function handlePropertyTypeChange() {
         const propertyType = $('#type').val();
         console.log('Property type changed to:', propertyType);
+        resetSubcategory();
 
         // Hide all sections first
         $('#sale_section').hide().addClass('hidden-section');
@@ -295,6 +389,28 @@ $(() => {
         $('#ownership_wrapper').hide().addClass('hidden-section');
         $('#agreement_section').hide().addClass('hidden-section');
         $('#duration_notice_section').hide().addClass('hidden-section');
+
+        // PG special rule: PG => Residential only
+        if (propertyType === 'pg') {
+            // force residential selection
+            $('input[name="property_group"][value="residential"]').prop('checked', true).trigger('change');
+
+            // hide/disable commercial option
+            $('#commercial_option_wrapper').addClass('d-none').hide();
+            $('input[name="property_group"][value="commercial"]').prop('checked', false);
+
+            $('#pg_wrapper').removeClass('d-none').fadeIn(200);
+            $('.residential-field').fadeOut(200); // mimic 99acres: PG doesn't ask bedrooms counters initially
+
+            // Hide rent/sale sections for PG
+            $('#rent_section').hide().addClass('hidden-section');
+            $('#sale_section').hide().addClass('hidden-section');
+            resetSubcategory();
+            return;
+        }
+
+        // non-PG => restore commercial option
+        $('#commercial_option_wrapper').removeClass('d-none').show();
 
         if (propertyType === 'sale') {
             $('#sale_section').removeClass('hidden-section').fadeIn(200);
@@ -313,13 +429,31 @@ $(() => {
             // Hide PG section for rent
             $('#pg_wrapper').fadeOut(200).addClass('d-none');
             
-        } else if (propertyType === 'pg') {
-            $('#pg_wrapper').removeClass('d-none').fadeIn(200);
-            $('.residential-field').fadeOut(200); // Hide bedroom fields for PG
-            
-            // Hide rent sections for PG
-            $('#rent_section').hide().addClass('hidden-section');
-            $('#sale_section').hide().addClass('hidden-section');
+        }
+    }
+
+    // ============================================================
+    // 9. CONSTRUCTION STATUS (Ready vs Under Construction)
+    // ============================================================
+
+    function handleConstructionStatusChange() {
+        const status = $('#availability_status').val();
+        const $age = $('#age_wrapper');
+        const $pos = $('#possession_wrapper');
+
+        if (!$age.length || !$pos.length) return;
+
+        if (status === 'ready') {
+            $age.removeClass('d-none').fadeIn(150);
+            $pos.addClass('d-none').hide();
+            $pos.find('input,select,textarea').val('');
+        } else if (status === 'under_construction') {
+            $pos.removeClass('d-none').fadeIn(150);
+            $age.addClass('d-none').hide();
+            $age.find('select').val('');
+        } else {
+            $age.addClass('d-none').hide();
+            $pos.addClass('d-none').hide();
         }
     }
 
@@ -439,6 +573,9 @@ $(() => {
         
         console.log('Initial state - Property Group:', propertyGroup, 'Property Type:', propertyType, 'Commercial Type:', commercialType);
         
+        // Ensure optional area fields are hidden until enabled
+        $('#builtField, #superField').hide().addClass('d-none');
+
         // Trigger handlers based on initial state
         if (propertyGroup === 'residential') {
             $('#residential-category-block').fadeIn(200).removeClass('d-none');
@@ -473,6 +610,9 @@ $(() => {
         // Handle property type (sale/rent/pg)
         handlePropertyTypeChange();
 
+        // Construction status
+        handleConstructionStatusChange();
+
         // Handle counters
         setupCounterFields();
         
@@ -496,26 +636,17 @@ $(() => {
         handlePropertyTypeChange();
     });
 
+    // Construction status change
+    $(document).on('change', '#availability_status', function () {
+        handleConstructionStatusChange();
+    });
+
     // Commercial main type change (Office/Retail/Land/Warehouse)
     $(document).on('change', 'input[name="commercial_main_type"]', function() {
         handleCommercialMainTypeChange();
     });
 
-    // Residential category change
-    $(document).on('change', 'input[name="property_category"]', function() {
-        const hasBedrooms = $(this).closest('label').data('hasBedrooms') === true || $(this).closest('label').data('hasBedrooms') === 'true';
-        updateFieldsBasedOnCategory($(this).val(), hasBedrooms);
-    });
-    
-    function updateFieldsBasedOnCategory(category, hasBedrooms) {
-        if (hasBedrooms) {
-            $('.residential-field').fadeIn(200);
-            $('#furnishing-options-panel').fadeIn(200);
-        } else {
-            $('.residential-field').fadeOut(200);
-            $('#furnishing-options-panel').fadeOut(200);
-        }
-    }
+    // (Residential category change is handled inside attachCategoryHandlers)
 
     // ============================================================
     // 13. INITIALIZATION ON DOM READY

@@ -52,6 +52,8 @@
                 <div class="col-sm-12">
                     <p class="text-center mb-0">
                         {!! $copyright !!}
+                        &nbsp;|&nbsp;
+                        <a href="{{ route('public.page', 'privacy-policy') }}" class="text-white">{{ __('Privacy Policy') }}</a>
                     </p>
                 </div>
             </div>

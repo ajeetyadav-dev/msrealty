@@ -148,6 +148,45 @@
     display: none;
 }
 
+/* ==================== SUBCATEGORY CHIPS ==================== */
+#subcategory_block {
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #e6eaf0;
+    border-radius: 8px;
+}
+
+.subcat-chip {
+    display: inline-flex;
+    align-items: center;
+}
+
+.subcat-chip input {
+    display: none;
+}
+
+.subcat-chip label {
+    padding: 8px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    cursor: pointer;
+    background: #fff;
+    font-weight: 500;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.subcat-chip input:checked + label {
+    background: #0078bd;
+    border-color: #0078bd;
+    color: #fff;
+}
+
+.subcat-chip label:hover {
+    border-color: #0078bd;
+    color: #0078bd;
+}
+
 /* ==================== CHECKBOX STYLES ==================== */
 .room-checkbox,
 .custom-checkbox {

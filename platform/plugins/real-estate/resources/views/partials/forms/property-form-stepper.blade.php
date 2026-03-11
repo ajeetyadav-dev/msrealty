@@ -10,390 +10,602 @@
     @endphp
 
     <style>
-        .stepper-container {
-            margin-bottom: 30px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    /* Reset and Base Styles */
+    * {
+        box-sizing: border-box;
+    }
+    
+    /* Ensure form elements are always clickable */
+    input, select, textarea, button, label, .form-group, .mb-3, .card-body {
+        pointer-events: auto !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+    
+    /* Step Container */
+    .stepper-container {
+        margin-bottom: 30px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 10;
+    }
+    
+    /* Step Indicator */
+    .step-indicator {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 5;
+    }
+    
+    .step-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        min-width: 100px;
+        position: relative;
+        z-index: 6;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        pointer-events: auto !important;
+    }
+    
+    .step-item:hover {
+        transform: translateY(-2px);
+    }
+    
+    .step-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        width: calc(100% - 20px);
+        height: 2px;
+        background: #e9ecef;
+        z-index: 1;
+        transition: background 0.3s ease;
+    }
+    
+    .step-item.active:not(:last-child)::after {
+        background: #0d6efd;
+    }
+    
+    .step-item.completed:not(:last-child)::after {
+        background: #28a745;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e9ecef;
+        border: 2px solid #dee2e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: #6c757d;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 7;
+        transition: all 0.3s ease;
+        pointer-events: auto !important;
+    }
+    
+    .step-item.active .step-number {
+        background: #0d6efd;
+        color: white;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+    }
+    
+    .step-item.completed .step-number {
+        background: #28a745;
+        color: white;
+        border-color: #28a745;
+        box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+    }
+    
+    .step-item.completed .step-number::after {
+        content: '✓';
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .step-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: #6c757d;
+        text-align: center;
+        transition: color 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .step-item.active .step-label {
+        color: #0d6efd;
+        font-weight: 600;
+    }
+    
+    .step-item.completed .step-label {
+        color: #28a745;
+    }
+    
+    /* Step Content - CRITICAL FIXES */
+    .step-content {
+        display: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* First step is visible by default */
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+}
+    
+    .step-content.active {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        animation: fadeIn 0.3s ease-in;
+        z-index: 2 !important;
+    }
+    
+    /* Ensure ALL form elements are clickable and visible */
+    .step-content.active {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.step-content {
+    display: none;
+}
+    
+    /* Override any hidden states */
+   
+    
+    /* For inline elements */
+    .step-content.active .d-flex,
+    .step-content.active .btn-group,
+    .step-content.active .form-check {
+        display: flex !important;
+    }
+    
+    .step-content.active .d-inline,
+    .step-content.active .form-check-inline {
+        display: inline-block !important;
+    }
+    
+    @keyframes fadeIn {
+        from { 
+            opacity: 0; 
+            transform: translateY(10px); 
         }
-        
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+    }
+    
+    .step-header {
+        color: #0d6efd;
+        font-weight: 600;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #e9ecef;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .step-header::before {
+        content: '';
+        width: 4px;
+        height: 24px;
+        background: #0d6efd;
+        border-radius: 2px;
+    }
+    
+    /* Step Navigation */
+    .step-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-top: 30px;
+        padding: 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+        border-top: 2px solid #0d6efd;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        position: relative;
+        z-index: 10;
+    }
+    
+    .step-btn {
+        padding: 12px 30px;
+        font-weight: 600;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 15px;
+        min-width: 120px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        pointer-events: auto !important;
+        z-index: 11 !important;
+    }
+    
+    .step-btn.prev {
+        background: white;
+        color: #495057;
+        border: 1px solid #dee2e6;
+    }
+    
+    .step-btn.prev:hover {
+        background: #f8f9fa;
+        border-color: #adb5bd;
+        transform: translateX(-2px);
+    }
+    
+    .step-btn.next {
+        background: #0d6efd;
+        color: white;
+        margin-left: auto;
+    }
+    
+    .step-btn.next:hover {
+        background: #0b5ed7;
+        transform: translateX(2px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+    
+    .step-btn.submit {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+    }
+    
+    .step-btn.submit:hover {
+        background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+    
+    /* Validation Styles */
+    .is-invalid {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+        animation: shake 0.5s;
+    }
+    
+    .invalid-feedback {
+        display: block !important;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        width: 100%;
+        animation: slideDown 0.3s ease;
+    }
+    
+    /* Progress Bar */
+    .progress-bar-container {
+        margin-bottom: 20px;
+        background: #e9ecef;
+        border-radius: 10px;
+        height: 8px;
+        overflow: hidden;
+    }
+    
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #0d6efd 0%, #6610f2 100%);
+        transition: width 0.3s ease;
+        border-radius: 10px;
+    }
+    
+    /* Remove loading state completely */
+    .form-stepper-loading {
+        position: relative;
+        min-height: 400px;
+    }
+    
+    /* Ensure no overlay blocks interaction */
+    .form-stepper-loading::before,
+    .form-stepper-loading::after {
+        display: none !important;
+        content: none !important;
+    }
+    
+    .form-stepper-ready .form-stepper-loading::before,
+    .form-stepper-ready .form-stepper-loading::after {
+        display: none !important;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
         .step-indicator {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .step-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-            min-width: 100px;
-            position: relative;
-        }
-        
-        .step-item:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            width: 100%;
-            height: 2px;
-            background: #e9ecef;
-            z-index: 0;
-        }
-        
-        .step-item.active:not(:last-child)::after {
-            background: #0d6efd;
-        }
-        
-        .step-item.completed:not(:last-child)::after {
-            background: #28a745;
-        }
-        
-        .step-number {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #e9ecef;
-            border: 2px solid #dee2e6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: #6c757d;
-            margin-bottom: 8px;
-            position: relative;
-            z-index: 1;
-            transition: all 0.3s ease;
-        }
-        
-        .step-item.active .step-number {
-            background: #0d6efd;
-            color: white;
-            border-color: #0d6efd;
-        }
-        
-        .step-item.completed .step-number {
-            background: #28a745;
-            color: white;
-            border-color: #28a745;
-        }
-        
-        .step-item.completed .step-number::after {
-            content: '✓';
-            font-size: 20px;
-            font-weight: bold;
+            gap: 5px;
         }
         
         .step-label {
-            font-size: 13px;
-            font-weight: 500;
-            color: #6c757d;
-            text-align: center;
+            font-size: 11px;
         }
         
-        .step-item.active .step-label {
-            color: #0d6efd;
-            font-weight: 600;
-        }
-        
-        .step-item.completed .step-label {
-            color: #28a745;
-        }
-        
-        /* Hide all steps by default */
-        [data-step-id] {
-            display: none !important;
-        }
-        
-        /* Show only active step */
-        [data-step-id].step-active {
-            display: block !important;
-            animation: fadeIn 0.3s ease-in;
-        }
-        
-        /* Ensure form groups are visible when step is active */
-        [data-step-id].step-active .form-group,
-        [data-step-id].step-active .form-check,
-        [data-step-id].step-active .mb-3,
-        [data-step-id].step-active .mb-4 {
-            display: block !important;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .step-number {
+            width: 35px;
+            height: 35px;
+            font-size: 14px;
         }
         
         .step-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid #e9ecef;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-left: -15px;
-            margin-right: -15px;
-            margin-bottom: -15px;
+            flex-direction: column;
+            gap: 10px;
         }
         
         .step-btn {
-            padding: 12px 30px;
-            font-weight: 600;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 15px;
-            min-width: 120px;
-        }
-        
-        .step-btn.prev {
-            background: #f8f9fa;
-            color: #495057;
-        }
-        
-        .step-btn.prev:hover {
-            background: #e9ecef;
+            width: 100%;
         }
         
         .step-btn.next {
-            background: #0d6efd;
-            color: white;
-            margin-left: auto;
+            margin-left: 0;
         }
-        
-        .step-btn.next:hover {
-            background: #0b5ed7;
-        }
-        
-        .step-btn.submit {
-            background: #28a745;
-            color: white;
-        }
-        
-        .step-btn.submit:hover {
-            background: #218838;
-        }
-        
-        .is-invalid {
-            border-color: #dc3545 !important;
-        }
-        
-        .invalid-feedback {
-            display: block;
-            color: #dc3545;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-    </style>
+    }
+</style>
 
-    <div class="stepper-container">
-        <div class="step-indicator">
-            <div class="step-item active" data-step="1">
-                <div class="step-number">1</div>
-                <div class="step-label">Basic Info</div>
+    <!-- Remove loading wrapper to prevent blocking -->
+    <div id="form-stepper-wrapper" data-vue-ignore >
+        <div class="stepper-container">
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-bar" style="width: 12.5%;"></div>
             </div>
-            <div class="step-item" data-step="2">
-                <div class="step-number">2</div>
-                <div class="step-label">Location</div>
-            </div>
-            <div class="step-item" data-step="3">
-                <div class="step-number">3</div>
-                <div class="step-label">Property Details</div>
-            </div>
-            <div class="step-item" data-step="4">
-                <div class="step-number">4</div>
-                <div class="step-label">Media</div>
-            </div>
-            <div class="step-item" data-step="5">
-                <div class="step-number">5</div>
-                <div class="step-label">Pricing</div>
-            </div>
-            <div class="step-item" data-step="6">
-                <div class="step-number">6</div>
-                <div class="step-label">Additional Details</div>
+            <div class="step-indicator">
+                <div class="step-item active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Intent</div>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Category</div>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Location</div>
+                </div>
+                <div class="step-item" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Details</div>
+                </div>
+                <div class="step-item" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Construction</div>
+                </div>
+                <div class="step-item" data-step="6">
+                    <div class="step-number">6</div>
+                    <div class="step-label">Pricing</div>
+                </div>
+                <div class="step-item" data-step="7">
+                    <div class="step-number">7</div>
+                    <div class="step-label">Additional</div>
+                </div>
+                <div class="step-item" data-step="8">
+                    <div class="step-number">8</div>
+                    <div class="step-label">Owner</div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="gap-3 col-md-9">
-            @if ($showFields && $form->hasMainFields())
-                <x-core::card class="mb-3">
-                    <x-core::card.body>
-                        <div class="{{ $form->getWrapperClass() }}">
-                            {{ $form->getOpenWrapperFormColumns() }}
-
-                            @php
-                                // Define step mapping for all fields
-                                $stepMapping = [
-                                    // Step 1: Basic Info
-                                    1 => [
-                                        'name', 'type', 'categories_custom'
-                                    ],
-                                    // Step 2: Location
-                                    2 => [
-                                        'location_data', 'location', 'zip_code', 'landmark', 'latitude', 'longitude', 'google_map',
-                                        'rowOpen6', 'rowClose6'
-                                    ],
-                                    // Step 3: Property Details
-                                    3 => [
-                                        'number_bedroom', 'number_bathroom', 'number_balcony', 'number_floor', 
-                                        'counter_script', 'all_areas_combined', 'available_from', 'age_of_property', 
-                                        'willing_to_rent', 'furnishing', 'furnishing_panel', 'parking', 'ownership',
-                                        'property_category', 'floor_no', 'total_floors', 'car_parking',
-                                        'facing', 'overlooking', 'is_non_vegetarian', 'is_gated_community',
-                                        'main_entrance', 'water_source', 'power_backup', 'flooring', 'additional_rooms',
-                                        'transaction_type', 'availability_status', 'possession_status'
-                                    ],
-                                    // Step 4: Media
-                                    4 => [
-                                        'images[]', 'video'
-                                    ],
-                                    // Step 5: Pricing
-                                    5 => [
-                                        'pricing_section', 'price', 'price_per_sqft', 'currency_id', 'period',
-                                        'is_price_negotiable', 'maintenance_charges', 'maintenance_charges_period',
-                                        'annual_dues', 'booking_amount', 'commission', 'rowOpen', 'rowClose',
-                                        'rowOpen1', 'rowClose1', 'rowOpen2', 'rowClose2', 'rowOpen3', 'rowClose3',
-                                        'rowOpen4', 'rowClose4', 'rowOpen5', 'rowClose5', 'rowOpen7', 'rowClose7'
-                                    ],
-                                    // Step 6: Additional Details
-                                    6 => [
-                                        'description', 'content', 'is_featured', 'featured_priority',
-                                        'unique_features', 'private_notes', 'floor_plans', 'rera_id',
-                                        'contact_person_name', 'contact_person_email', 'contact_person_phone',
-                                        'best_time_to_contact'
-                                    ],
-                                ];
-                                
-                                $currentStep = 1;
-                            @endphp
-
-                            @php
-                                $currentStepForHeader = 0;
-                                $stepTitles = [
-                                    1 => 'Basic Information',
-                                    2 => 'Location Details',
-                                    3 => 'Property Details',
-                                    4 => 'Photos & Video',
-                                    5 => 'Pricing Information',
-                                    6 => 'Additional Details'
-                                ];
-                            @endphp
-
-                            @foreach ($fields as $key => $field)
-                                @if ($field->getName() == $form->getBreakFieldPoint())
-                                    @break
-                                @else
-                                    @unset($fields[$key])
-                                @endif
-
-                                @continue(in_array($field->getName(), $exclude))
+        <div class="row">
+            <div class="gap-3 col-md-9">
+                @if ($showFields && $form->hasMainFields())
+                    <x-core::card class="mb-3">
+                        <x-core::card.body>
+                            <div class="{{ $form->getWrapperClass() }}">
+                                {{ $form->getOpenWrapperFormColumns() }}
 
                                 @php
-                                    $fieldStep = 6; // Default to last step
-                                    foreach ($stepMapping as $step => $fieldNames) {
-                                        if (in_array($field->getName(), $fieldNames)) {
-                                            $fieldStep = $step;
-                                            break;
-                                        }
+                                    // Define step mapping for all fields
+                                    $stepMapping = [
+                                        // Step 1: Property intent + group/category selection
+                                        1 => [
+                                            'name', 'type'
+                                        ],
+                                        // Step 2: Category/subcategory (dynamic)
+                                        2 => [
+                                            'categories_custom'
+                                        ],
+                                        // Step 3: Location details
+                                        3 => [
+                                            'location_heading', 'location_data', 'location',
+                                            'city', 'locality', 'sub_locality', 'landmark', 'address', 'pin_code',
+                                            'zip_code', 'latitude', 'longitude', 'google_map',
+                                            'rowOpen6', 'rowClose6'
+                                        ],
+                                        // Step 4: Property details (dynamic)
+                                        4 => [
+                                            'step3_master_open', 'step3_row_open', 'number_bedroom', 'number_bathroom', 'number_balcony',
+                                            'step3_row_close', 'all_areas_combined', 'additional_rooms',
+                                            'furnishing', 'furnishing_panel', 'car_parking',
+                                            'floor_row_open', 'floor_no', 'total_floors', 'floor_type', 'available_type', 'available_from',
+                                            'commercial_office_block', 'floor_row_close', 'step3_master_close',
+                                            'willing_to_rent', 'pg_section',
+                                            'images[]', 'video'
+                                        ],
+                                        // Step 5: Construction status
+                                        5 => [
+                                            'availability_status', 'age_of_property', 'possession_by'
+                                        ],
+                                        // Step 6: Pricing
+                                        6 => [
+                                            'pricing_section',
+                                            'maintenance_charges', 'maintenance_charges_period', 'annual_dues',
+                                            'booking_amount', 'brokerage', 'tax_and_govt_charges',
+                                            'currency_id', 'period',
+                                            'rowOpen4', 'rowClose4'
+                                        ],
+                                        // Step 7: Additional details
+                                        7 => [
+                                            'description',
+                                            'step6_wrapper_open', 'features', 'facilities_section',
+                                            'pet_friendly', 'fire_extinguisher', 'fire_sensors', 'fire_sprinklers', 'fire_hose',
+                                            'oxygen_duct', 'no_of_staircases',
+                                            'residential_section', 'facing', 'overlooking', 'rera_registered', 'rera_number',
+                                            'gated_community', 'power_backup_type', 'water_supply_type', 'corner_property', 'open_sides',
+                                            'residential_section_close',
+                                            'commercial_section', 'fire_noc', 'retail_details', 'occupancy_certificate', 'lock_in_period',
+                                            'escalation_percentage', 'loading_percentage', 'electricity_load', 'dg_backup', 'building_grade',
+                                            'commercial_section_close',
+                                            'step6_wrapper_close',
+                                            'content', 'private_notes', 'floor_plans'
+                                        ],
+                                        // Step 8: Owner details
+                                        8 => [
+                                            'owner_details_heading',
+                                            'owner_name', 'mobile_number', 'alternate_number', 'owner_email', 'posted_by', 'best_time_to_contact',
+                                        ],
+                                    ];
+                                    
+                                    $stepTitles = [
+                                        1 => 'Property Intent',
+                                        2 => 'Property Category',
+                                        3 => 'Location',
+                                        4 => 'Property Details',
+                                        5 => 'Construction Status',
+                                        6 => 'Pricing',
+                                        7 => 'Additional Details',
+                                        8 => 'Owner Details',
+                                    ];
+                                    
+                                    // Initialize step containers
+                                    $stepContainers = [];
+                                    foreach (range(1, 8) as $step) {
+                                        $stepContainers[$step] = [];
                                     }
                                     
-                                    // Add step header if this is the first field of a new step
-                                    $showHeader = false;
-                                    if ($fieldStep != $currentStepForHeader) {
-                                        $currentStepForHeader = $fieldStep;
-                                        $showHeader = true;
+                                    // Group fields by step
+                                    foreach ($fields as $key => $field) {
+                                        if ($field->getName() == $form->getBreakFieldPoint()) {
+                                            break;
+                                        }
+                                        
+                                        if (in_array($field->getName(), $exclude)) {
+                                            continue;
+                                        }
+                                        
+                                        $fieldStep = 6; // Default to last step
+                                        foreach ($stepMapping as $step => $fieldNames) {
+                                            if (in_array($field->getName(), $fieldNames)) {
+                                                $fieldStep = $step;
+                                                break;
+                                            }
+                                        }
+                                        
+                                        $stepContainers[$fieldStep][] = $field;
+                                        unset($fields[$key]);
                                     }
                                 @endphp
 
-                                @if ($showHeader)
-                                    <div data-step-id="{{ $fieldStep }}" class="step-section-header" @if($fieldStep == 1) style="display: block;" @else style="display: none;" @endif>
-                                        <h3 class="mb-4" style="color: #0d6efd; font-weight: 600; padding-bottom: 15px; border-bottom: 2px solid #e9ecef;">
-                                            Step {{ $fieldStep }}: {{ $stepTitles[$fieldStep] ?? 'Step ' . $fieldStep }}
-                                        </h3>
-                                    </div>
-                                @endif
+                                @foreach ($stepContainers as $step => $stepFields)
+                                    @if (!empty($stepFields))
+                                        <div class="step-content" data-step="{{ $step }}">
+                                            <h3 class="step-header">
+                                                Step {{ $step }}: {{ $stepTitles[$step] ?? 'Step ' . $step }}
+                                            </h3>
+                                            @foreach ($stepFields as $field)
+                                                {!! $field->render() !!}
+                                                @if (defined('BASE_FILTER_SLUG_AREA') && $field->getName() == SlugHelper::getColumnNameToGenerateSlug($form->getModel()))
+                                                    {!! apply_filters(BASE_FILTER_SLUG_AREA, null, $form->getModel()) !!}
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                @endforeach
 
-                                <div data-step-id="{{ $fieldStep }}" @if($fieldStep == 1) class="step-active" @endif>
-                                    {!! $field->render() !!}
-                                </div>
-
-                                @if (defined('BASE_FILTER_SLUG_AREA') && $field->getName() == SlugHelper::getColumnNameToGenerateSlug($form->getModel()))
-                                    {!! apply_filters(BASE_FILTER_SLUG_AREA, null, $form->getModel()) !!}
-                                @endif
-                            @endforeach
-
-                            {{ $form->getCloseWrapperFormColumns() }}
-                        </div>
-
-                        <div class="step-nav">
-                            <button type="button" class="step-btn prev" id="prev-btn" style="display: none;">← Back</button>
-                            <button type="button" class="step-btn next" id="next-btn">Next →</button>
-                            <button type="submit" class="step-btn submit" id="submit-btn" style="display: none;">✓ Submit Property</button>
-                        </div>
-                    </x-core::card.body>
-                </x-core::card>
-            @endif
-
-            @foreach ($form->getMetaBoxes() as $key => $metaBox)
-                {!! $form->getMetaBox($key) !!}
-            @endforeach
-
-            @php
-                do_action(BASE_ACTION_META_BOXES, 'advanced', $form->getModel());
-            @endphp
-        </div>
-
-        <div class="col-md-3 gap-3 d-flex flex-column-reverse flex-md-column mb-md-0 mb-5">
-            {!! $form->getActionButtons() !!}
-
-            @php
-                do_action(BASE_ACTION_META_BOXES, 'top', $form->getModel());
-            @endphp
-
-            @foreach ($fields as $field)
-                @if (!in_array($field->getName(), $exclude))
-                    @if (in_array($field->getType(), ['hidden', \Botble\Base\Forms\Fields\HiddenField::class]))
-                        {!! $field->render() !!}
-                    @else
-                        <x-core::card class="meta-boxes">
-                            <x-core::card.header>
-                                <x-core::card.title>
-                                    {!! Form::customLabel($field->getName(), $field->getOption('label'), $field->getOption('label_attr')) !!}
-                                </x-core::card.title>
-                            </x-core::card.header>
-
-                            @php
-                                $bodyAttrs = Arr::get($field->getOptions(), 'card-body-attrs', []);
-
-                                if (!Arr::has($bodyAttrs, 'class')) {
-                                    $bodyAttrs['class'] = '';
-                                }
-
-                                $bodyAttrs['class'] .= ' card-body';
-                            @endphp
-
-                            <div {!! Html::attributes($bodyAttrs) !!}>
-                                {!! $field->render([], in_array($field->getType(), ['radio', 'checkbox'])) !!}
+                                {{ $form->getCloseWrapperFormColumns() }}
                             </div>
-                        </x-core::card>
-                    @endif
-                @endif
-            @endforeach
 
-            @php
-                do_action(BASE_ACTION_META_BOXES, 'side', $form->getModel());
-            @endphp
+                            <div class="step-nav">
+                                <button type="button" class="step-btn prev" id="prev-btn" style="display: none;">
+                                    ← Back
+                                </button>
+                                <button type="button" class="step-btn next" id="next-btn">
+                                    Next →
+                                </button>
+                                <button type="submit" class="step-btn submit" id="submit-btn" style="display: none;">
+                                    ✓ Submit Property
+                                </button>
+                            </div>
+                        </x-core::card.body>
+                    </x-core::card>
+                @endif
+
+                @foreach ($form->getMetaBoxes() as $key => $metaBox)
+                    {!! $form->getMetaBox($key) !!}
+                @endforeach
+
+                @php
+                    do_action(BASE_ACTION_META_BOXES, 'advanced', $form->getModel());
+                @endphp
+            </div>
+
+            <div class="col-md-3 gap-3 d-flex flex-column-reverse flex-md-column mb-md-0 mb-5">
+                {!! $form->getActionButtons() !!}
+
+                @php
+                    do_action(BASE_ACTION_META_BOXES, 'top', $form->getModel());
+                @endphp
+
+                @foreach ($fields as $field)
+                    @if (!in_array($field->getName(), $exclude))
+                        @if (in_array($field->getType(), ['hidden', \Botble\Base\Forms\Fields\HiddenField::class]))
+                            {!! $field->render() !!}
+                        @else
+                            <x-core::card class="meta-boxes">
+                                <x-core::card.header>
+                                    <x-core::card.title>
+                                        {!! Form::customLabel($field->getName(), $field->getOption('label'), $field->getOption('label_attr')) !!}
+                                    </x-core::card.title>
+                                </x-core::card.header>
+
+                                @php
+                                    $bodyAttrs = Arr::get($field->getOptions(), 'card-body-attrs', []);
+
+                                    if (!Arr::has($bodyAttrs, 'class')) {
+                                        $bodyAttrs['class'] = '';
+                                    }
+
+                                    $bodyAttrs['class'] .= ' card-body';
+                                @endphp
+
+                                <div {!! Html::attributes($bodyAttrs) !!}>
+                                    {!! $field->render([], in_array($field->getType(), ['radio', 'checkbox'])) !!}
+                                </div>
+                            </x-core::card>
+                        @endif
+                    @endif
+                @endforeach
+
+                @php
+                    do_action(BASE_ACTION_META_BOXES, 'side', $form->getModel());
+                @endphp
+            </div>
         </div>
     </div>
 
@@ -403,216 +615,140 @@
 
     @yield('form_end')
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let currentStep = 1;
-        const totalSteps = 6;
-        
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const submitBtn = document.getElementById('submit-btn');
-        const stepItems = document.querySelectorAll('.step-item');
-        const form = document.querySelector('form');
-        
-        function updateStepDisplay() {
-            // Hide all field wrappers and headers first
-            document.querySelectorAll('[data-step-id]').forEach(el => {
-                el.classList.remove('step-active');
-                el.style.display = 'none';
-            });
-            
-            // Show only current step fields and header
-            const currentStepFields = document.querySelectorAll(`[data-step-id="${currentStep}"]`);
-            currentStepFields.forEach(el => {
-                el.classList.add('step-active');
-                el.style.display = 'block';
-            });
-            
-            // Update step indicator
-            stepItems.forEach(item => {
-                item.classList.remove('active', 'completed');
-                const step = parseInt(item.dataset.step);
-                if (step === currentStep) {
-                    item.classList.add('active');
-                } else if (step < currentStep) {
-                    item.classList.add('completed');
-                }
-            });
-            
-            // Update navigation buttons
-            if (currentStep === 1) {
-                prevBtn.style.display = 'none';
-            } else {
-                prevBtn.style.display = 'block';
-            }
-            
-            if (currentStep === totalSteps) {
-                nextBtn.style.display = 'none';
-                submitBtn.style.display = 'block';
-            } else {
-                nextBtn.style.display = 'block';
-                submitBtn.style.display = 'none';
-            }
-            
-            // Scroll to top of form
-            setTimeout(() => {
-                const stepperContainer = document.querySelector('.stepper-container');
-                if (stepperContainer) {
-                    stepperContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }, 100);
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    let currentStep = 1;
+    const totalSteps = 8;
+
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const stepItems = document.querySelectorAll('.step-item');
+    const progressBar = document.getElementById('progress-bar');
+    const form = document.querySelector('form');
+
+    function updateProgressBar() {
+        if (progressBar) {
+            progressBar.style.width = ((currentStep / totalSteps) * 100) + "%";
         }
-        
-        function validateStep(step) {
-            const stepFields = document.querySelectorAll(`[data-step-id="${step}"]`);
-            let isValid = true;
-            const errors = [];
-            
-            stepFields.forEach(fieldWrapper => {
-                // Check for required inputs
-                const requiredInputs = fieldWrapper.querySelectorAll('input[required], select[required], textarea[required]');
-                requiredInputs.forEach(input => {
-                    // Skip hidden inputs
-                    if (input.type === 'hidden') return;
-                    
-                    let value = input.value;
-                    
-                    // Handle checkboxes
-                    if (input.type === 'checkbox' || input.type === 'radio') {
-                        const name = input.name;
-                        const checked = fieldWrapper.querySelector(`input[name="${name}"]:checked`);
-                        if (!checked) {
-                            isValid = false;
-                            input.classList.add('is-invalid');
-                            errors.push(`Please fill in ${input.name || 'this field'}`);
-                        } else {
-                            input.classList.remove('is-invalid');
-                        }
-                    } else {
-                        if (!value || value.trim() === '') {
-                            isValid = false;
-                            input.classList.add('is-invalid');
-                            errors.push(`Please fill in ${input.name || 'this field'}`);
-                        } else {
-                            input.classList.remove('is-invalid');
-                        }
-                    }
-                });
-                
-                // Check for required selects (Select2)
-                const requiredSelects = fieldWrapper.querySelectorAll('select[required]');
-                requiredSelects.forEach(select => {
-                    if (!select.value || select.value === '' || select.value === '0') {
-                        isValid = false;
-                        select.classList.add('is-invalid');
-                        errors.push(`Please select ${select.name || 'this field'}`);
-                    } else {
-                        select.classList.remove('is-invalid');
-                    }
-                });
-            });
-            
-            // Show error message if validation fails
-            if (!isValid && errors.length > 0) {
-                // Remove existing error messages
-                document.querySelectorAll('.step-error-message').forEach(el => el.remove());
-                
-                // Create and show error message
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'alert alert-danger step-error-message mt-3';
-                errorDiv.innerHTML = '<strong>Please complete all required fields:</strong><ul class="mb-0 mt-2">' + 
-                    errors.map(e => '<li>' + e + '</li>').join('') + '</ul>';
-                
-                const stepNav = document.querySelector('.step-nav');
-                stepNav.parentNode.insertBefore(errorDiv, stepNav);
-                
-                // Scroll to error
-                setTimeout(() => {
-                    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
-            } else {
-                // Remove error messages
-                document.querySelectorAll('.step-error-message').forEach(el => el.remove());
-            }
-            
-            return isValid;
+    }
+
+    function updateStepDisplay() {
+
+        // Hide all steps
+        document.querySelectorAll('.step-content').forEach(el => {
+            el.style.display = "none";
+            el.classList.remove("active");
+        });
+
+        // Show current step
+        const activeStep = document.querySelector(`.step-content[data-step="${currentStep}"]`);
+        if (activeStep) {
+            activeStep.style.display = "block";
+            activeStep.classList.add("active");
         }
-        
-        // Next button click handler
-        nextBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Validate current step before proceeding
-            if (validateStep(currentStep)) {
-                if (currentStep < totalSteps) {
-                    currentStep++;
-                    updateStepDisplay();
-                }
+
+        // Update step indicators
+        stepItems.forEach(item => {
+            item.classList.remove("active", "completed");
+            const step = parseInt(item.dataset.step);
+
+            if (step === currentStep) {
+                item.classList.add("active");
+            } else if (step < currentStep) {
+                item.classList.add("completed");
             }
         });
-        
-        // Previous button click handler
-        prevBtn.addEventListener('click', function(e) {
+
+        // Buttons control
+        if (prevBtn) prevBtn.style.display = currentStep === 1 ? "none" : "inline-flex";
+        if (nextBtn) nextBtn.style.display = currentStep === totalSteps ? "none" : "inline-flex";
+        if (submitBtn) submitBtn.style.display = currentStep === totalSteps ? "inline-flex" : "none";
+
+        updateProgressBar();
+    }
+
+    function validateStep(step) {
+        const stepContent = document.querySelector(`.step-content[data-step="${step}"]`);
+        if (!stepContent) return true;
+
+        let valid = true;
+
+        const requiredFields = stepContent.querySelectorAll('input[required], select[required], textarea[required]');
+
+        requiredFields.forEach(field => {
+
+            if (field.disabled || field.offsetParent === null) return;
+
+            if (field.type === "checkbox" || field.type === "radio") {
+                const checked = stepContent.querySelector(`input[name="${field.name}"]:checked`);
+                if (!checked) valid = false;
+            } else {
+                if (!field.value || field.value.trim() === "") valid = false;
+            }
+        });
+
+        return valid;
+    }
+
+    // NEXT
+    if (nextBtn) {
+        nextBtn.addEventListener("click", function (e) {
             e.preventDefault();
-            e.stopPropagation();
-            
+
+            if (!validateStep(currentStep)) {
+                alert("Please fill all required fields before proceeding.");
+                return;
+            }
+
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateStepDisplay();
+            }
+        });
+    }
+
+    // PREV
+    if (prevBtn) {
+        prevBtn.addEventListener("click", function (e) {
+            e.preventDefault();
             if (currentStep > 1) {
                 currentStep--;
                 updateStepDisplay();
             }
         });
-        
-        // Allow clicking on step indicators to navigate
-        stepItems.forEach(item => {
-            item.style.cursor = 'pointer';
-            item.addEventListener('click', function() {
-                const step = parseInt(this.dataset.step);
-                // Allow navigation to completed steps or next step (if current step is validated)
-                if (step <= currentStep) {
-                    // Can go back to any previous step
-                    currentStep = step;
-                    updateStepDisplay();
-                } else if (step === currentStep + 1) {
-                    // Can go to next step only if current step is valid
-                    if (validateStep(currentStep)) {
-                        currentStep = step;
-                        updateStepDisplay();
-                    }
-                }
-            });
+    }
+
+    // Step click
+    stepItems.forEach(item => {
+        item.addEventListener("click", function () {
+            const step = parseInt(this.dataset.step);
+
+            if (step <= currentStep + 1) {
+                currentStep = step;
+                updateStepDisplay();
+            }
         });
-        
-        // Validate on form submit
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                if (!validateStep(currentStep)) {
+    });
+
+    // Final submit validation
+    if (form) {
+        form.addEventListener("submit", function (e) {
+
+            for (let i = 1; i <= totalSteps; i++) {
+                if (!validateStep(i)) {
                     e.preventDefault();
+                    alert("Please complete all required fields before submitting.");
                     return false;
                 }
-            });
-        }
-        
-        // Initialize on page load
-        updateStepDisplay();
-        
-        // Also initialize after a short delay to handle any dynamic content
-        setTimeout(function() {
-            updateStepDisplay();
-        }, 500);
-        
-        // Re-initialize if form content changes (for dynamic fields)
-        const observer = new MutationObserver(function(mutations) {
-            updateStepDisplay();
+            }
         });
-        
-        const formContainer = document.querySelector('.card-body');
-        if (formContainer) {
-            observer.observe(formContainer, {
-                childList: true,
-                subtree: true
-            });
-        }
-    });
-    </script>
+    }
+
+    updateStepDisplay();
+});
+</script>
+
+
 @endsection

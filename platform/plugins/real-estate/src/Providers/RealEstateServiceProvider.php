@@ -297,31 +297,32 @@ class RealEstateServiceProvider extends ServiceProvider
                     'url' => fn () => route('investor.index'),
                     'permissions' => ['investor.index'],
                 ])
-                ->registerItem([
-                    'id' => 'cms-plugins-consult',
-                    'priority' => 6,
-                    'parent_id' => null,
-                    'name' => 'plugins/real-estate::consult.name',
-                    'icon' => 'ti ti-home-question',
-                    'url' => fn () => route('consult.index'),
-                    'permissions' => ['consult.index'],
-                ])
-                ->registerItem([
-                    'id' => 'cms-plugins-consult-list',
-                    'parent_id' => 'cms-plugins-consult',
-                    'name' => 'plugins/real-estate::consult.name',
-                    'icon' => 'ti ti-list-details',
-                    'route' => 'consult.index',
-                    'permissions' => ['consult.index'],
-                ])
-                ->registerItem([
-                    'id' => 'cms-plugins-consult-custom-fields',
-                    'parent_id' => 'cms-plugins-consult',
-                    'name' => 'plugins/real-estate::consult.custom_field.name',
-                    'icon' => 'ti ti-forms',
-                    'route' => 'consult.custom-fields.index',
-                    'permissions' => ['consult.custom-fields.index'],
-                ])
+                // Consult menu removed temporarily
+                // ->registerItem([
+                //     'id' => 'cms-plugins-consult',
+                //     'priority' => 6,
+                //     'parent_id' => null,
+                //     'name' => 'plugins/real-estate::consult.name',
+                //     'icon' => 'ti ti-home-question',
+                //     'url' => fn () => route('consult.index'),
+                //     'permissions' => ['consult.index'],
+                // ])
+                // ->registerItem([
+                //     'id' => 'cms-plugins-consult-list',
+                //     'parent_id' => 'cms-plugins-consult',
+                //     'name' => 'plugins/real-estate::consult.name',
+                //     'icon' => 'ti ti-list-details',
+                //     'route' => 'consult.index',
+                //     'permissions' => ['consult.index'],
+                // ])
+                // ->registerItem([
+                //     'id' => 'cms-plugins-consult-custom-fields',
+                //     'parent_id' => 'cms-plugins-consult',
+                //     'name' => 'plugins/real-estate::consult.custom_field.name',
+                //     'icon' => 'ti ti-forms',
+                //     'route' => 'consult.custom-fields.index',
+                //     'permissions' => ['consult.custom-fields.index'],
+                // ])
                 ->registerItem([
                     'id' => 'cms-plugins-real-estate-category',
                     'priority' => 4,
